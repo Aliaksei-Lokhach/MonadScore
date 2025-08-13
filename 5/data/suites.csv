@@ -1,2 +1,0 @@
-"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","24463","checkRunNode","Surefire suite","Mon Jul 28 19:45:55 GMT 2025","failed","Mon Jul 28 19:46:20 GMT 2025","tests.LoginTest","Surefire test","tests.LoginTest","checkRunNode"
