@@ -1,8 +1,9 @@
+# Базовый образ
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Установка JDK 17, Maven, Xvfb, ffmpeg и зависимостей
+# Установка JDK 17, Maven и зависимостей
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y openjdk-17-jdk maven wget unzip xvfb ffmpeg x11-utils ca-certificates \
         libnspr4 libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libx11-xcb1 libxcomposite1 \
@@ -24,6 +25,8 @@ RUN wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.183
     chmod +x /usr/bin/chromedriver && \
     rm -rf /tmp/chromedriver-linux64 chromedriver-linux64.zip
 
+# Проверка версий
+RUN google-chrome --version && chromedriver --version && java -version && mvn -version
+
+# Рабочая директория
 WORKDIR /workspace
-COPY run-tests.sh /workspace/run-tests.sh
-RUN chmod +x /workspace/run-tests.sh

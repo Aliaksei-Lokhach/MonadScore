@@ -81,8 +81,6 @@ public class BaseTest {
         options.addArguments("--disable-extensions-except=" + EXTENSION_PATH);
         options.addArguments("--load-extension=" + EXTENSION_PATH);
         HashMap<String, Object> chromePrefs = new HashMap<>();
-        chromePrefs.put("credentials_enable_service", false);
-        chromePrefs.put("profile.password_manager_enabled", false);
         options.setExperimentalOption("prefs", chromePrefs);
         options.addArguments("--lang=en");
         options.addArguments("--no-sandbox");
