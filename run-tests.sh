@@ -1,14 +1,17 @@
 #!/bin/bash
 set -e
 
-cd /workspace
+WORKDIR=/workspace
+cd $WORKDIR
 
 # Запуск виртуального дисплея
-Xvfb :99 -screen 0 1366x768x24 & sleep 10
+Xvfb :99 -screen 0 1366x768x24 &
+sleep 10
 
 # Старт записи экрана
 ffmpeg -y -video_size 1366x768 -framerate 15 -f x11grab -i :99 \
-  -codec:v libx264 -pix_fmt yuv420p screen_recording.mp4 > /dev/null 2>&1 & echo $! > ffmpeg_pid.txt
+  -codec:v libx264 -pix_fmt yuv420p "$WORKDIR/screen_recording.mp4" > /dev/null 2>&1 &
+echo $! > "$WORKDIR/ffmpeg_pid.txt"
 
 # Запуск Maven-тестов
 mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.xml' \
@@ -26,8 +29,16 @@ mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.
     -DPASSWORD="$PASS" -DPIN="$PIN"
 
 # Остановка записи
-kill -INT $(cat ffmpeg_pid.txt) && sleep 10
+kill -INT $(cat "$WORKDIR/ffmpeg_pid.txt")
+wait $(cat "$WORKDIR/ffmpeg_pid.txt") || true
+sleep 5
 
-# Сохраняем видео для Allure
-mkdir -p target/allure-results
-cp screen_recording.mp4 target/allure-results/
+# Проверка существования файла и копирование в allure-results
+mkdir -p "$WORKDIR/target/allure-results"
+if [ -f "$WORKDIR/screen_recording.mp4" ]; then
+    cp "$WORKDIR/screen_recording.mp4" "$WORKDIR/target/allure-results/"
+else
+    echo "ERROR: screen_recording.mp4 not found!"
+    ls -l "$WORKDIR"
+    exit 1
+fi
