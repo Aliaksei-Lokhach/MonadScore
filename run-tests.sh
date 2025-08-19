@@ -13,7 +13,8 @@ ffmpeg -y -video_size 1366x768 -framerate 15 -f x11grab -i :99 \
   -codec:v libx264 -pix_fmt yuv420p "$WORKDIR/screen_recording.mp4" > /dev/null 2>&1 &
 echo $! > "$WORKDIR/ffmpeg_pid.txt"
 
-# Запуск Maven-тестов
+# Запуск Maven-тестов (но не прерываем скрипт при ошибке)
+set +e
 mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.xml' \
     -DSEED_PHRASE_10="$SEED_10" -DEMAIL_10="$MAIL_10" \
     -DSEED_PHRASE_9="$SEED_9" -DEMAIL_9="$MAIL_9" \
@@ -27,6 +28,8 @@ mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.
     -DSEED_PHRASE_1="$SEED_1" -DEMAIL_1="$MAIL_1" \
     -DSEED_PHRASE_0="$SEED_0" -DEMAIL_0="$MAIL_0" \
     -DPASSWORD="$PASS" -DPIN="$PIN"
+TEST_EXIT_CODE=$?
+set -e
 
 # Остановка записи
 kill -INT $(cat "$WORKDIR/ffmpeg_pid.txt")
@@ -36,9 +39,8 @@ sleep 5
 # Проверка существования файла и копирование в allure-results
 mkdir -p "$WORKDIR/target/allure-results"
 if [ -f "$WORKDIR/screen_recording.mp4" ]; then
+    echo "✅ Видео найдено, копирую..."
     cp "$WORKDIR/screen_recording.mp4" "$WORKDIR/target/allure-results/"
 else
-    echo "ERROR: screen_recording.mp4 not found!"
-    ls -l "$WORKDIR"
-    exit 1
-fi
+    echo "❌ ERROR: screen_recording.mp4 не найден!"
+    echo "Файлы в $WORKDIR:"
