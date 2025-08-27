@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","15312","checkRunNodeTwo","Surefire suite","Wed Aug 27 02:14:50 UTC 2025","failed","Wed Aug 27 02:15:05 UTC 2025","tests.LoginTest","Surefire test","tests.LoginTest","checkRunNodeTwo"
+"","15364","checkRunNodeOne","Surefire suite","Wed Aug 27 02:14:34 UTC 2025","failed","Wed Aug 27 02:14:50 UTC 2025","tests.LoginTest","Surefire test","tests.LoginTest","checkRunNodeOne"
+"","16998","checkRunNodeZero","Surefire suite","Wed Aug 27 02:14:17 UTC 2025","failed","Wed Aug 27 02:14:34 UTC 2025","tests.LoginTest","Surefire test","tests.LoginTest","checkRunNodeZero"
