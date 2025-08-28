@@ -54,35 +54,37 @@ jobs:
       - name: Run tests in Docker
         run: |
           docker run --rm \
-            -e DISPLAY=$DISPLAY \
-            -e SEED_10="$SEED_10" -e MAIL_10="$MAIL_10" \
-            -e SEED_9="$SEED_9" -e MAIL_9="$MAIL_9" \
-            -e SEED_8="$SEED_8" -e MAIL_8="$MAIL_8" \
-            -e SEED_7="$SEED_7" -e MAIL_7="$MAIL_7" \
-            -e SEED_6="$SEED_6" -e MAIL_6="$MAIL_6" \
-            -e SEED_5="$SEED_5" -e MAIL_5="$MAIL_5" \
-            -e SEED_4="$SEED_4" -e MAIL_4="$MAIL_4" \
-            -e SEED_3="$SEED_3" -e MAIL_3="$MAIL_3" \
-            -e SEED_2="$SEED_2" -e MAIL_2="$MAIL_2" \
-            -e SEED_1="$SEED_1" -e MAIL_1="$MAIL_1" \
-            -e SEED_0="$SEED_0" -e MAIL_0="$MAIL_0" \
-            -e PASS="$PASS" \
-            -e PIN="$PIN" \
-            -v ${{ github.workspace }}:/workspace \
-            -v ~/.m2:/root/.m2 \
-            ci-chrome138:latest \
-            bash /workspace/run-tests.sh
+          -e DISPLAY=$DISPLAY \
+          -e SEED_10="$SEED_10" -e MAIL_10="$MAIL_10" \
+          -e SEED_9="$SEED_9" -e MAIL_9="$MAIL_9" \
+          -e SEED_8="$SEED_8" -e MAIL_8="$MAIL_8" \
+          -e SEED_7="$SEED_7" -e MAIL_7="$MAIL_7" \
+          -e SEED_6="$SEED_6" -e MAIL_6="$MAIL_6" \
+          -e SEED_5="$SEED_5" -e MAIL_5="$MAIL_5" \
+          -e SEED_4="$SEED_4" -e MAIL_4="$MAIL_4" \
+          -e SEED_3="$SEED_3" -e MAIL_3="$MAIL_3" \
+          -e SEED_2="$SEED_2" -e MAIL_2="$MAIL_2" \
+          -e SEED_1="$SEED_1" -e MAIL_1="$MAIL_1" \
+          -e SEED_0="$SEED_0" -e MAIL_0="$MAIL_0" \
+          -e PASS="$PASS" \
+          -e PIN="$PIN" \
+          -v ${{ github.workspace }}:/workspace \
+          -v ~/.m2:/root/.m2 \
+          ci-chrome138:latest \
+          bash /workspace/run-tests.sh
 
-      - name: Проверка наличия файла
-        run: ls -l /workspace/target/allure-results/
-
+      - name: Проверяем, что файл появился
+        if: always()
+        run: |
+          echo "🔎 Содержимое target/allure-results:"
+          ls -l target/allure-results/ || echo "❗ Папка пуста"
 
       - name: Upload screen recording
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
           name: screen_recording
-          path: /workspace/target/allure-results/screen_recording.mp4
+          path: target/allure-results/screen_recording.mp4
 
       - name: Get Allure history
         uses: actions/checkout@v5.0.0

@@ -1,21 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -o pipefail   # не прерывать скрипт, но фиксировать ошибки команд
 
-# shellcheck disable=SC2164
-cd /workspace
+# -------------------------------------------------
+# 1. Переменные
+# -------------------------------------------------
+WORKDIR="/workspace"
+cd "$WORKDIR"
 
-# Создаём директорию явно
-mkdir -p /workspace/target/allure-results
+# -------------------------------------------------
+# 2. Создаём нужные каталоги (после монтирования)
+# -------------------------------------------------
+mkdir -p "$WORKDIR/target/allure-results"
+mkdir -p "$WORKDIR/.x11-unix"   # иногда требуется для Xvfb
 
-# Запуск виртуального дисплея
+# -------------------------------------------------
+# 3. Запуск виртуального дисплея
+# -------------------------------------------------
+echo "▶️  Запускаем Xvfb ..."
 Xvfb :99 -screen 0 1366x768x24 &
-sleep 10
+XVFB_PID=$!
+sleep 5   # небольшая пауза, чтобы Xvfb успел стартовать
 
-# Запись экрана
+# -------------------------------------------------
+# 4. Запуск записи экрана
+# -------------------------------------------------
+FFMPEG_LOG="$WORKDIR/ffmpeg.log"
+echo "▶️  Запускаем ffmpeg (лог → $FFMPEG_LOG) ..."
 ffmpeg -y -video_size 1366x768 -framerate 15 -f x11grab -i :99 \
-  -codec:v libx264 -pix_fmt yuv420p "$WORKDIR/screen_recording.mp4" > /dev/null 2>&1 &
-echo $! > "$WORKDIR/ffmpeg_pid.txt"
+       -c:v libx264 -pix_fmt yuv420p "$WORKDIR/screen_recording.mp4" \
+       >"$FFMPEG_LOG" 2>&1 &
+FFMPEG_PID=$!
+echo "$FFMPEG_PID" > "$WORKDIR/ffmpeg_pid.txt"
 
-# Запуск Maven-тестов (но не прерываем скрипт при ошибке)
+# -------------------------------------------------
+# 5. Запуск Maven‑тестов
+# -------------------------------------------------
+echo "▶️  Запускаем Maven‑тесты ..."
+# Мы НЕ хотим, чтобы падение тестов прервало скрипт → || true
 mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.xml' \
     -DSEED_PHRASE_10="$SEED_10" -DEMAIL_10="$MAIL_10" \
     -DSEED_PHRASE_9="$SEED_9" -DEMAIL_9="$MAIL_9" \
@@ -31,14 +52,30 @@ mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.
     -DPASSWORD="$PASS" -DPIN="$PIN" \
     || true
 
-# Остановка записи
-# shellcheck disable=SC2046
-kill -INT $(cat ffmpeg_pid.txt) && sleep 10
+# -------------------------------------------------
+# 6. Остановка записи экрана
+# -------------------------------------------------
+echo "▶️  Останавливаем ffmpeg (PID=$FFMPEG_PID) ..."
+kill -INT "$FFMPEG_PID" 2>/dev/null || echo "⚠️  ffmpeg уже завершён"
+sleep 3   # даём ffmpeg время завершить файл
 
-# Проверка и копирование файла
-if [ -f "$WORKDIR/screen_recording.mp4" ]; then
-  cp "$WORKDIR/screen_recording.mp4" target/allure-results/
-  echo "Видео сохранено"
+# -------------------------------------------------
+# 7. Копируем видео в директорию Allure
+# -------------------------------------------------
+if [[ -f "$WORKDIR/screen_recording.mp4" ]]; then
+    cp "$WORKDIR/screen_recording.mp4" "$WORKDIR/target/allure-results/"
+    echo "✅  Видео скопировано в target/allure-results/"
 else
-  echo "Ошибка: Файл screen_recording.mp4 не найден"
+    echo "❌  Файл screen_recording.mp4 НЕ найден!"
 fi
+
+# -------------------------------------------------
+# 8. Выводим небольшие отладочные данные
+# -------------------------------------------------
+echo "📂 Содержимое $WORKDIR/target/allure-results/:"
+ls -l "$WORKDIR/target/allure-results/" || echo "❗ Папка пуста"
+echo "📝 Содержание ffmpeg.log (первые 20 строк):"
+head -n 20 "$FFMPEG_LOG" || echo "❗ ffmpeg.log отсутствует"
+
+# Завершаем Xvfb (чисто для порядка)
+kill "$XVFB_PID" 2>/dev/null || true
