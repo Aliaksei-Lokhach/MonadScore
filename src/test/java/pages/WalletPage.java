@@ -82,7 +82,9 @@ public class WalletPage extends BasePage{
         String[] seedWords = seedPhrase.split(" ");
         $("[type='checkbox']").click();
         $(byText("Import Existing Wallet")).click();
-        $(byText("Recover Wallet")).shouldBe(visible);
+        $(byText("Seed Phrase")).shouldBe(visible);
+        $(byText("Seed Phrase")).click();
+        $(byText("I have a 24-word recovery phrase")).shouldBe(visible);
         $(byText("I have a 24-word recovery phrase")).click();
         $(byText("I have a 24-word recovery phrase")).shouldNotBe(visible);
         ElementsCollection inputs = $$x("//div[(starts-with(text(), 'Import an existing'))]" +
@@ -101,7 +103,9 @@ public class WalletPage extends BasePage{
         String[] seedWords = seedPhrase.split(" ");
         $("[type='checkbox']").click();
         $(byText("Import Existing Wallet")).click();
-        $(byText("Recover Wallet")).shouldBe(visible);
+        $(byText("Seed Phrase")).shouldBe(visible);
+        $(byText("Seed Phrase")).click();
+        $(byText("I have a 24-word recovery phrase")).shouldBe(visible);
         ElementsCollection inputs = $$x("//div[(starts-with(text(), 'Import an existing'))]" +
                 "/following::div//div//input");
 
