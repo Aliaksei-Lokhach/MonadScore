@@ -8,7 +8,7 @@
     <test name="Chrome UI Tests">
         <groups>
             <run>
-                <include name="Second"/>
+                <include name="First"/>
             </run>
         </groups>
         <classes>

@@ -6,7 +6,7 @@ public class LoginTest extends BaseTest {
 
     @Test(
             testName = "Run Node #0",
-            groups = {"Second"},
+            groups = {"First"},
             priority = 0
     )
     public void checkRunNodeZero() throws InterruptedException {
@@ -236,7 +236,7 @@ public class LoginTest extends BaseTest {
 
     @Test(
             testName = "Run Node #10",
-            groups = {"First"},
+            groups = {"Second"},
             priority = 10
     )
     public void checkRunNodeTen() throws InterruptedException {
