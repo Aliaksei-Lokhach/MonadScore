@@ -32,7 +32,7 @@ public class LoginTest extends BaseTest {
 
     @Test(
             testName = "Run Node #1",
-            groups = {"Second"},
+            groups = {"First"},
             priority = 1
     )
     public void checkRunNodeOne() throws InterruptedException {
@@ -55,7 +55,7 @@ public class LoginTest extends BaseTest {
 
     @Test(
             testName = "Run Node #2",
-            groups = {"Second"},
+            groups = {"First"},
             priority = 2
     )
     public void checkRunNodeTwo() throws InterruptedException {
