@@ -1,6 +1,10 @@
 #!/bin/bash
 
+# shellcheck disable=SC2164
 cd /workspace
+
+# Создаём директорию явно
+mkdir -p /workspace/target/allure-results
 
 # Запуск виртуального дисплея
 Xvfb :99 -screen 0 1366x768x24 &
@@ -28,6 +32,7 @@ mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.
     || true
 
 # Остановка записи
+# shellcheck disable=SC2046
 kill -INT $(cat ffmpeg_pid.txt) && sleep 10
 
 # Проверка и копирование файла
