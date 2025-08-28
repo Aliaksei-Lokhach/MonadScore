@@ -6,7 +6,7 @@
     },
     "name": "HaHa Wallet",
     "description": "Use HaHa for the best experience on Monad. We provide the tools that help you stay informed and degen on the go.",
-    "version": "1.1.7",
+    "version": "1.2.1",
     "manifest_version": 3,
     "permissions": [
         "storage",
