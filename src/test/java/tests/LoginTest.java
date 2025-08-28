@@ -10,9 +10,11 @@ public class LoginTest extends BaseTest {
             priority = 0
     )
     public void checkRunNodeZero() throws InterruptedException {
-        walletPage.openLoginPage()
-                .isLoginPageOpened();
+        loginPage.openPage()
+                .isOpened();
         Thread.sleep(5);
+//        walletPage.openLoginPage()
+//                .isLoginPageOpened()
 //                .closeAnotherTabs()
 //                .login(emailZero, password)
 //                .isCreatePinCodePageOpened()
