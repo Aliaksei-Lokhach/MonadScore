@@ -77,7 +77,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: screen-recording
+          name: screen_recording
           path: /workspace/target/allure-results/screen_recording.mp4
 
       - name: Get Allure history
