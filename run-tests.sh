@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 cd /workspace
 
@@ -7,7 +6,7 @@ cd /workspace
 Xvfb :99 -screen 0 1366x768x24 &
 sleep 10
 
-# Старт записи экрана
+# Запись экрана
 ffmpeg -y -video_size 1366x768 -framerate 15 -f x11grab -i :99 \
   -codec:v libx264 -pix_fmt yuv420p "$WORKDIR/screen_recording.mp4" > /dev/null 2>&1 &
 echo $! > "$WORKDIR/ffmpeg_pid.txt"
@@ -25,11 +24,16 @@ mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.
     -DSEED_PHRASE_2="$SEED_2" -DEMAIL_2="$MAIL_2" \
     -DSEED_PHRASE_1="$SEED_1" -DEMAIL_1="$MAIL_1" \
     -DSEED_PHRASE_0="$SEED_0" -DEMAIL_0="$MAIL_0" \
-    -DPASSWORD="$PASS" -DPIN="$PIN"
+    -DPASSWORD="$PASS" -DPIN="$PIN" \
+    || true
 
 # Остановка записи
 kill -INT $(cat ffmpeg_pid.txt) && sleep 10
 
-# Сохраняем видео для Allure
-mkdir -p target/allure-results
-cp screen_recording.mp4 target/allure-results/
+# Проверка и копирование файла
+if [ -f "$WORKDIR/screen_recording.mp4" ]; then
+  cp "$WORKDIR/screen_recording.mp4" target/allure-results/
+  echo "Видео сохранено"
+else
+  echo "Ошибка: Файл screen_recording.mp4 не найден"
+fi

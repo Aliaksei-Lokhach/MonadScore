@@ -73,6 +73,10 @@ jobs:
             ci-chrome138:latest \
             bash /workspace/run-tests.sh
 
+      - name: Проверка наличия файла
+        run: ls -l /workspace/target/allure-results/
+
+
       - name: Upload screen recording
         if: always()
         uses: actions/upload-artifact@v4.6.2
