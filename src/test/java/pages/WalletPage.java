@@ -20,7 +20,7 @@ public class WalletPage extends BasePage{
 
     public WalletPage openLoginPage() {
         log.info("Opening HaHa Wallet page...");
-        open("chrome-extension://hhgnmnncjfnbbnnkincfcbnhhjagcana/home.html#onboarding/login");
+        open("chrome-extension://dnmpelhpleegioagnoeflghldepcpbbd/home.html#onboarding/login");
         return this;
     }
 

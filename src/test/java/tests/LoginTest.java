@@ -10,24 +10,21 @@ public class LoginTest extends BaseTest {
             priority = 0
     )
     public void checkRunNodeZero() throws InterruptedException {
+        walletPage.openLoginPage()
+                .isLoginPageOpened()
+                .closeAnotherTabs()
+                .login(emailZero, password)
+                .isCreatePinCodePageOpened()
+                .createPinCode(newPassword)
+                .isImportPageOpened()
+                .importWalletShort(seedZero)
+                .isImportWalletSuccessful();
         loginPage.openPage()
-                .isOpened();
-        Thread.sleep(5);
-//        walletPage.openLoginPage()
-//                .isLoginPageOpened()
-//                .closeAnotherTabs()
-//                .login(emailZero, password)
-//                .isCreatePinCodePageOpened()
-//                .createPinCode(newPassword)
-//                .isImportPageOpened()
-//                .importWalletShort(seedZero)
-//                .isImportWalletSuccessful();
-//        loginPage.openPage()
-//                .isOpened()
-//                .connectWallet()
-//                .signWallet()
-//                .runNode()
-//                .dailyCheck();
+                .isOpened()
+                .connectWallet()
+                .signWallet()
+                .runNode()
+                .dailyCheck();
     }
 
     @Test(
