@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5.0.0
 
       - name: Cache Maven repository
         uses: actions/cache@v4
@@ -75,13 +75,13 @@ jobs:
 
       - name: Upload screen recording
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: screen-recording
           path: /workspace/target/allure-results/screen_recording.mp4
 
       - name: Get Allure history
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5.0.0
         if: always()
         continue-on-error: true
         with:
