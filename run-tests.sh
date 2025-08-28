@@ -37,7 +37,7 @@ echo "$FFMPEG_PID" > "$WORKDIR/ffmpeg_pid.txt"
 # -------------------------------------------------
 echo "▶️  Запускаем Maven‑тесты ..."
 # Мы НЕ хотим, чтобы падение тестов прервало скрипт → || true
-mvn -B clean test -Dgroups=Second -DsuiteXmlFile='src/test/resources/StartNodes.xml' \
+mvn -B clean test -Dgroups=First -DsuiteXmlFile='src/test/resources/StartNodes.xml' \
     -DSEED_PHRASE_10="$SEED_10" -DEMAIL_10="$MAIL_10" \
     -DSEED_PHRASE_9="$SEED_9" -DEMAIL_9="$MAIL_9" \
     -DSEED_PHRASE_8="$SEED_8" -DEMAIL_8="$MAIL_8" \
