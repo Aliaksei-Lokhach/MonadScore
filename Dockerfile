@@ -1,5 +1,6 @@
-USER root
 FROM ubuntu:22.04
+
+USER root
 
 ENV DEBIAN_FRONTEND=noninteractive
 
