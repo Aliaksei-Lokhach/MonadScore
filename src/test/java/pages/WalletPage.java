@@ -35,7 +35,8 @@ public class WalletPage extends BasePage{
         return this;
     }
 
-    public WalletPage closeAnotherTabs() {
+    public WalletPage closeAnotherTabs() throws InterruptedException {
+        Thread.sleep(5000);
         log.info("Close another tabs");
         robot.keyPress(KeyEvent.VK_CONTROL);
         robot.delay(50);
